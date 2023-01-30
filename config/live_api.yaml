@@ -1,0 +1,525 @@
+登录:
+  - caseName: SMS
+    method: post
+    reqPath: /v1/sms
+    reqPara:
+      usage: "1"
+    reqDict:
+      type: "message"
+      phone: "+8617778186053"
+      lang: "en | hi"
+      hash_str: "1111"
+    isSkip: 1
+  - caseName: SMSCheck
+    method: post
+    reqPath: /v1/sms/verify
+    reqPara: ~
+    reqDict:
+      code: 1234
+      phone: "+8617778186053"
+    isSkip: 1
+  - caseName: Login
+    method: post
+    reqPath: /v1/login
+    reqPara: ~
+    reqDict:
+      type: phone
+      token: "+8617778186053_1234"
+    isSkip: 1
+直播:
+  - caseName: LiveCreate # 已验证
+    method: post
+    reqPath: /v1/live/create
+    reqPara: ~
+    reqDict:
+      cover: "https://mxlive.mxplay.com/api/default/default_profile_new.png"
+      userLevel: 0
+      gender: "0"
+      width: 540
+      bitrate: 1200
+      title: "User60531hh is Live: Monitor test"
+      roomType: 0
+      height: 960
+      "tags":
+        - "Dance"
+    checkType: 2  # 0 只校验返回为200，1 校验返回内容是否为空，2 校验返回内容指定字段
+    verityFiled:
+      - "groupId,streamId,type"
+    isSkip: 1
+  - caseName: LiveEnter # 已验证
+    method: get
+    reqPath: /v1/live/enter
+    reqPara:
+      anchor: "$anchor_id"
+    checkType: 1
+  - caseName: DiscountCard # 已验证
+    method: get
+    reqPath: /v1/cash/live/discountcard
+    reqPara:
+      streamId: "$group_id"
+    checkType: 1
+  - caseName: LiveMaterials # 已验证
+    method: get
+    reqPath: /v1/live/materials
+    reqPara:
+      version: -1
+    checkType: 1
+  - caseName: LiveHeartbeatV1 # 已验证
+    method: post
+    reqPath: /v1/live/heartbeat
+    reqPara: ~
+    reqDict: ~
+    checkType: 1
+    isSkip: 1
+  - caseName: LiveMute # 已验证 （返回为200, 但没有返回值）
+    method: post
+    reqPath: /v1/live/mute
+    reqPara: ~
+    reqDict:
+      groupId: "$group_id"
+      action: "2008" # 2007 禁言；2008 解除禁言
+      accounts:
+        - 1300qPl # 被禁言的观众
+      anchorId: "$anchor_id" # 主播 id
+    checkType: 0
+    isSkip: 1
+  - caseName: UpdateBlockWords # 已验证
+    method: post
+    reqPath: /v1/live/block/setwords
+    reqPara: ~
+    reqDict:
+      type: "1001" # 1001:增加，1002:删除
+      word: "Test"
+      userAvatar: https://mxlive.mxplay.com/api/default/default_profile_new.png
+      userName: User60531hh
+      groupId: "$group_id"
+      uid: "$anchor_id"
+    checkType: 0
+  - caseName: GetBlockWords # 已验证
+    method: get
+    reqPath: /v1/live/block/words
+    reqPara:
+      anchor: "$anchor_id"
+    checkType: 1
+  - caseName: LiveGetRooms # 已验证
+    method: get
+    reqPath: /v1/live/rooms
+    reqPara:
+      id: "$group_id" # group id
+      mode: 0
+      size: 10
+    checkType: 1
+  - caseName: LiveList # 已验证
+    method: get
+    reqPath: /v1/live/list
+    reqPara:
+      next: ""
+      size: 10
+    checkType: 1
+  - caseName: LiveSendmsg # 已验证
+    method: post
+    reqPath: /v1/live/sendmsg
+    reqPara: ~
+    reqDict:
+      cmd: "CustomCmdMsg"
+      data:
+        cmd: "2001"
+        msg: "测试一下"
+        uid: "$anchor_id"
+        userAvatar: "https://mxlive.mxplay.com/api/default/default_profile_new.png"
+        userName: "User60531hh"
+      groupId: "$group_id"
+    checkType: 0
+    isSkip: 1
+  - caseName: LiveJoin # 已验证, 需要从tabpage获取到group_id
+    method: get
+    reqPath: /v1/live/join
+    reqPara:
+      group: "$group_id"
+    checkType: 1
+    isSkip: 1
+  - caseName: LiveLeave # 已验证, 需要从tabpage获取到group_id
+    method: get
+    reqPath: /v1/live/leave
+    reqPara:
+      group: "$group_id"
+    checkType: 1
+    isSkip: 1
+  - caseName: LiveDestroy # 已验证
+    method: post
+    reqPath: /v1/live/destroy
+    reqPara: ~
+    reqDict: ~
+    checkType: 1
+    isSkip: 1
+充值:
+  - caseName: PaymentHistory  # 已验证
+    method: get
+    reqPath: /v1/cash/live/payment/history
+    reqPara:
+      size: 10
+      next: ''
+    checkType: 1
+  - caseName: GiftsToken # 已验证
+    method: get
+    reqPath: /v1/live/gifts/token
+    reqPara: ~
+    checkType: 1
+  - caseName: TransactionHistroy    # 已验证, 可以获取到交易历史
+    method: get
+    reqPath: /v1/cash/live/transaction/history
+    reqPara:
+      size: 10
+      next: ''
+    checkType: 1
+  - caseName: TransactionDetail   # 需要线上id
+    method: get
+    reqPath: /v1/cash/live/transaction/detail
+    reqPara:
+      id: ""
+    checkType: 1
+    isSkip: 1
+  - caseName: GiftHistory   # 已验证
+    method: get
+    reqPath: /v1/cash/live/gift/history
+    reqPara:
+      size: 10
+      next: ''
+    reqDict: ~
+    checkType: 1
+  - caseName: LiveRecharge  # 需要认证（充值订单创建）
+    method: post
+    reqPath: /v1/cash/live/recharge
+    reqPara: ~
+    reqDict:
+      amount: 50
+      productId: b0d205e33a4d6ce79e4c77688f82a93c
+      gems: 50
+      from: 0
+    checkType: 1
+    isSkip: 1
+  - caseName: GiftsSend # 需要放到直播过程中，获取group_id
+    method: post
+    reqPath: /v1/live/gifts/send
+    reqPara: ~
+    reqDict:
+      token: gift token
+      anchorId: "$anchor_id"
+      groupId: "$group_id"
+      giftId: giftid
+      count: 5
+      gems: 10
+      timestamp: 100
+      userName: ""
+      userAvatar: ""
+      uid": ""
+    checkType: 1
+    isSkip: 1
+  - caseName: WalletHome  #
+    method: get
+    reqPath: /v1/cash/live/home
+    reqPara: ~
+    reqDict: ~
+    checkType: 1
+  - caseName: PaymentInitiate
+    method: post
+    reqPath: /v1/payment/recurring/initiate
+    reqPara: ~
+    reqDict:
+      token: "$gift_token"
+      pgId: "jsp"
+      paymentInstrumentId: "externalpg"
+    checkType: 1
+    isSkip: 1
+PK:       # 直播过程中
+  - caseName: PKHeart  # 已验证
+    method: get
+    reqPath: /v1/live/heartbeat
+    reqPara: ~
+    reqDict: ~
+    checkType: 0
+  - caseName: PKMatchStart  # 已验证
+    method: post
+    reqPath: /v1/pk/match/start
+    reqPara: ~
+    reqDict: ~
+    checkType: 1
+  - caseName: PKMatchCancel   # 已验证
+    method: post
+    reqPath: /v1/pk/match/cancel
+    reqPara: ~
+    reqDict: ~
+    checkType: 1
+  - caseName: PKTimeout   # 返回状态码500，内容为为空
+    method: post
+    reqPath: /v1/pk/timeout
+    reqPara: ~
+    reqDict:
+      type: battle
+    checkType: 1
+    isSkip: 1
+  - caseName: InviteList  # 已验证
+    method: get
+    reqPath: /v1/pk/invite/list
+    reqPara: ~
+    reqDict: ~
+    checkType: 1
+  - caseName: PKInviteStart # 发起方。有返回数据，但状态码是500
+    method: post
+    reqPath: /v1/pk/invite/start
+    reqPara: ~
+    reqDict:
+      anchodId: "$friend_id"
+    checkType: 1
+    isSkip: 1
+  - caseName: PKInviteCancel  # 发起方。有返回数据，但状态码是500
+    method: post
+    reqPath: /v1/pk/invite/cancel
+    reqPara: ~
+    reqDict:
+      anchodId: "$friend_id"
+    checkType: 1
+    isSkip: 1
+  - caseName: PKInviteAccept  # 被pk方。有返回数据，但状态码是500
+    method: post
+    reqPath: /v1/pk/invite/accept
+    reqPara: ~
+    reqDict:
+      anchodId: "$friend_id"
+      isAccept: 1
+    checkType: 1
+    isSkip: 1
+  - caseName: PKInviteEnd
+    method: post
+    reqPath: /v1/pk/invite/end
+    reqPara: ~
+    reqDict:
+      anchodId: "$anchor_id"
+    checkType: 0
+    isSkip: 1
+  - caseName: PKEnd   # 已验证
+    method: post
+    reqPath: /v1/pk/end
+    reqPara: ~
+    reqDict:
+      anchodId: "$anchor_id"
+      endReason: 3
+    checkType: 0
+用户相关:
+  - caseName: GetPublisherInfo # 已验证
+    method: get
+    reqPath: /v1/publisher
+    reqPara:
+      id: "$anchor_id"
+    checkType: 1
+  - caseName: UpdatePublisherInfo # 已验证
+    method: post
+    reqPath: /v1/user/edit
+    reqPara: ~
+    reqDict:
+      gender: 2
+    checkType: 1
+  - caseName: CheckUpdateCustomid  # 已验证
+    method: post
+    reqPath: /v1/user/customid
+    reqPara: ~
+    reqDict:
+      custom_id: "$anchor_id"
+      msg: check
+    checkType: 1
+    isSkip: 1
+  - caseName: CMSGetPublisherInfo  # 已验证
+    method: get
+    reqPath: /v1/cms/publisher
+    reqPara:
+      id: "$anchor_id"
+    checkType: 1
+  - caseName: GetMXPublisherInfo  # 已验证
+    method: get
+    reqPath: /v1/mxpublisher
+    reqPara:
+      id: "$anchor_id"
+    checkType: 1
+  - caseName: GetFollowlist # 已验证
+    method: get
+    reqPath: /v1/user/followlist
+    reqPara:
+      id: "$anchor_id"
+      type: followers
+    checkType: 1
+#  - caseName: GetUserInfo  # 404
+#    method: get
+#    reqPath: /v1/live/user
+#    reqPara:
+#      uid: "$anchor_id"
+#    checkType: 1
+  - caseName: Follow  # 已验证
+    method: post
+    reqPath: /v1/user/follow
+    reqPara: ~
+    reqDict:
+      id: "$friend_id"
+      change: 1
+    checkType: 1
+  - caseName: GetUserLevel  # 已验证
+    method: get
+    reqPath: /v1/user/level/getuserlevel
+    reqPara: ~
+    reqDict: ~
+    checkType: 1
+h5:
+  - caseName: GetLevel  # 已验证
+    method: get
+    reqPath: /v1/user/level/getlevel
+    reqPara: ~
+    reqDict: ~
+    checkType: 1
+  - caseName: StreamerLevel
+    method: post
+    reqPath: /v1/user/level/apply
+    reqPara: ~
+    reqDict: ~
+    checkType: 1
+    isSkip: 1
+其他:
+  - caseName: LiveTab # 已验证
+    method: get
+    reqPath: /v1/live/livetab
+    reqPara:
+      size: 10
+    checkType: 2
+    verityFiled:
+      - "tabs/id"
+      - "tabs:L3"
+  - caseName: TabPage # 已验证
+    method: get
+    reqPath: /v1/live/tabpage
+    reqPara:
+      size: 10
+      mode: 0
+      id: "$tab_id"
+    checkType: 2
+    verityFiled:
+      - "id,name,type"
+      - "resources(*type==banners)/resources/id,name,type,pic"
+#      - "resources(*type==banners)/resources-0/name:V_Janamashtami"
+  - caseName: Config # 已验证
+    method: get
+    reqPath: /v1/config
+    reqPara:
+      entry: init
+    checkType: 1
+私聊:
+  - caseName: PrivatecallList  # 已验证
+    method: get
+    reqPath: /v1/live/privatecall/list
+    reqPara:
+      size: 10
+      page: 1
+    checkType: 1
+  - caseName: PrivatecallPackagelist  # 已验证
+    method: get
+    reqPath: /v1/live/privatecall/packagelist
+    reqPara: ~
+    checkType: 1
+  - caseName: PrivatecallStart
+    method: post
+    reqPath: /v1/live/privatecall/start
+    reqPara: ~
+    reqDict:
+      roomId: ""
+      anchorId: "1300JN3"
+      packageId: ""
+      duration: 100
+      gems: 100
+    checkType: 1
+    isSkip: 1
+  - caseName: PrivatecallSendgift
+    method: post
+    reqPath: /v1/live/privatecall/sendgift
+    reqPara: ~
+    reqDict:
+      token: "gift token"
+      anchorId: ""
+      groupId: "group id"
+      giftId: "gift id"
+      count: 5
+      gems: 10
+      timestamp: 100
+      userName: ""
+      userAvatar: ""
+      uid: ""
+      continuousGift: ""
+      pendant: ""
+      label: ""
+    checkType: 1
+    isSkip: 1
+  - caseName: PrivatecallEnd
+    method: post
+    reqPath: /v1/live/privatecall/end
+    reqPara: ~
+    reqDict:
+      roomId: ""
+    checkType: 1
+    isSkip: 1
+装扮背包:
+  - caseName: DecoratebagInfo # 已验证
+    method: get
+    reqPath: /v1/user/decoratebag
+    reqPara: ~
+    checkType: 1
+  - caseName: GetDecorate # 已验证
+    method: get
+    reqPath: /v1/user/decoratebag/decorate
+    reqPara: ~
+    checkType: 1
+  - caseName: DecoratebagDownload # 已验证
+    method: get
+    reqPath: /v1/user/decoratebag/download
+    reqPara: ~
+    checkType: 1
+  - caseName: DecoratebagUse
+    method: post
+    reqPath: /v1/user/decoratebag/use
+    reqPara: ~
+    reqDict:
+      decorateId: ""
+      apply: 1
+    checkType: 1
+    isSkip: 1
+  - caseName: DecoratebagSendgift
+    method: post
+    reqPath: /v1/user/decoratebag/sendgift
+    reqPara: ~
+    reqDict:
+      anchorId: ""
+      liveId: ""
+      giftId: 1
+      UserName: ""
+      userAvatar: ""
+      labelIds: ["", ""]
+      giftBgId: ""
+      avatarFrameId: ""
+      type: 0
+    checkType: 1
+    isSkip: 1
+举报:
+  - caseName: ReportReason # 已验证
+    method: get
+    reqPath: /v1/report/reason
+    reqPara: ~
+    checkType: 1
+
+#分组名称:
+#  - caseName: 用例名称
+#    method: post/get 接口请求类型
+#    reqPath: /v1/sms 请求路径
+#    reqPara: 请求参数，get请求url中常用。无请求参数写：～
+#    reqDict: 请求体，post请求常用
+#    verityFiled: 需要校验的内容，可不写。规则如下：
+#         '/'表示层级;'-'表示选定的列表元素位置;';'分隔
+#         ':'后表示检查形式,默认为NN.(NN:值notNone, EX:key exist,L4表示长度不小于4,V_test表示验证元素值等于test);
+#         (*type==normal):选取结果中符合条件的结果,\*表示必须存在
+
+# dev正常，但线上跑不通的用例
+# ['LiveCreate', 'LiveHeartbeatV1', 'LiveMute', 'LiveSendmsg', 'LiveJoin', 'LiveLeave', 'LiveDestroy', 'CheckUpdateCustomid']
